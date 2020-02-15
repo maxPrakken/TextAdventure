@@ -17,6 +17,7 @@ namespace TextAdventure
             if(usable)
             {
                 UseItem();
+                Console.WriteLine("\n" + name + " has been used\n");
             }else
             {
                 Console.WriteLine("This item is not a usable object, try something else!");
@@ -28,6 +29,11 @@ namespace TextAdventure
         public int GetSize()
         {
             return size;
+        }
+
+        public bool GetUsable()
+        {
+            return usable;
         }
 
         public string GetName()

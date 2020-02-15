@@ -41,6 +41,9 @@ namespace TextAdventure
             garage.AddDoors(hub, "west");
             garage.AddDoors(secret, "south");
 
+            secret.AddDoors(garage, "north");
+            secret.AddDoors(kitchen, "west");
+
             allRooms.Add(start);
             allRooms.Add(hub);
             allRooms.Add(living);

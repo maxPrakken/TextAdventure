@@ -18,13 +18,6 @@ namespace TextAdventure
         {
             Intro();
             _nm.CreateRooms();
-            //foreach(Room r in _nm.allRooms)
-            //{
-            //    foreach(var d in r.GetDoors())
-            //    {
-            //        Console.WriteLine(d.Value);
-            //    }
-            //}
 
             while (true)
             {
@@ -88,38 +81,103 @@ namespace TextAdventure
                 {
                     if (String.Compare(splitResponse[1], d.Value, StringComparison.OrdinalIgnoreCase) == 0)
                     {
-                        match++;
-                        _nm.curRoom = d.Key;
+                        if (d.Key.GetLocked())
+                        {
+                            if (p.inventory.Count > 0)
+                            {
+                                foreach (GameObject gm in p.inventory)
+                                {
+                                    if ("key_" + d.Key.GetName() == gm.GetName())
+                                    {
+                                        match = 1;
+                                        _nm.curRoom = d.Key;
+                                        Console.WriteLine("\nYou've unlocked and entered the " + d.Key.GetName() + " room\n");
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        match = -1;
+                                    }
+                                }
+                            }else
+                            {
+                                match = -1;
+                            }
+                        }
+                        else
+                        {
+                            match = 1;
+                            _nm.curRoom = d.Key;
+                        }
                     }
                 }
                 if (match == 0)
                 {
                     Console.WriteLine("\n" + splitResponse[1] + " is not a valid imput");
                 }
+                if(match == -1)
+                {
+                    Console.WriteLine("You do not posses the key to this room");
+                }
             }
 
             else if (String.Compare("use", splitResponse[0], StringComparison.OrdinalIgnoreCase) == 0)
             {
-                // need items
+                foreach (GameObject gm in p.inventory)
+                {
+                    if (String.Compare(gm.GetName(), splitResponse[1], StringComparison.OrdinalIgnoreCase) == 0)
+                    {
+                        if(gm.GetUsable())
+                        {
+                            gm.Use();
+                            break;
+                        }
+                    }
+                }
             }
 
             else if (String.Compare("drop", splitResponse[0], StringComparison.OrdinalIgnoreCase) == 0)
             {
-                //foreach (GameObject) write the rest of this shiiiiit
+                GameObject toRemove = null;
+
+                foreach (GameObject gm in p.inventory)
+                {
+                    if(String.Compare(gm.GetName(), splitResponse[1], StringComparison.OrdinalIgnoreCase) == 0)
+                    {
+                        toRemove = gm;
+                        _nm.curRoom.GetInventory().Add(gm);
+                        break;
+                    }
+                }
+
+                if(toRemove != null)
+                {
+                    p.inventory.Remove(toRemove);
+                    Console.WriteLine("\nyou have dropped " + splitResponse[1] + " on the floor of the room\n");
+                }else
+                {
+                    Console.WriteLine("\n" + splitResponse[1] + " is not a item in your inventory");
+                }
             }
 
             else if (String.Compare("doors", response, StringComparison.OrdinalIgnoreCase) == 0)
             {
-                Console.WriteLine("\nyou got door(s) on your: ");
+                Console.WriteLine("\nyou got door(s) on your: \n");
 
                 foreach (var d in _nm.curRoom.GetDoors())
                 {
                     Console.WriteLine(d.Value + "\n");
                 }
             }
+
             else if (String.Compare("inventory", response, StringComparison.OrdinalIgnoreCase) == 0)
             {
-                Console.WriteLine("the items"); // write the rest of this shiiiit
+                Console.WriteLine("\nYour inventory consists of...\n");
+
+                foreach(GameObject gm in p.inventory)
+                {
+                    Console.WriteLine(gm.GetName());
+                }
             }
         }
 

@@ -25,7 +25,7 @@ namespace TextAdventure
 
         private void SpawnLoot()
         {
-            Medical m = new Medical(2, "car_fak");
+            Medical m = new Medical(2, "key_secret");
             inventory.Add(m);
         }
 
@@ -71,6 +71,11 @@ namespace TextAdventure
             {
                 return false;
             }
+        }
+
+        public bool GetLocked()
+        {
+            return locked;
         }
     }
 }
